@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Xổ Số 3 Số</title>
+<style>
+body { font-family: Arial; text-align:center; margin-top:40px }
+input { font-size:20px; width:120px; text-align:center }
+button { font-size:18px }
+.number { font-size:48px; color:red; letter-spacing:8px }
+</style>
+</head>
+<body>
+
+<h1>🎰 XỔ SỐ 3 SỐ</h1>
+<p>🎟 Vé: <b>2.000đ</b></p>
+
+<input id="guess" placeholder="000">
+<button onclick="check()">Dò vé</button>
+
+<h2>Kết quả hôm nay</h2>
+<div class="number" id="result">---</div>
+<p id="msg"></p>
+
+<script>
+const VE = 2000;
+
+fetch("result.json")
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("result").innerText = d.number || "---";
+  });
+
+function check() {
+  const ve = document.getElementById("guess").value;
+  if (!/^\d{3}$/.test(ve)) {
+    alert("Nhập đúng 3 số (000–999)");
+    return;
+  }
+
+  fetch("result.json")
+    .then(r => r.json())
+    .then(d => {
+      const kq = d.number;
+      let tien = -VE;
+      let msg = "❌ Không trúng";
+
+      if (ve === kq) {
+        tien = 100000;
+        msg = "🏆 GIẢI ĐẶC BIỆT";
+      } else if (ve.slice(1) === kq.slice(1)) {
+        tien = 50000;
+        msg = "🥇 GIẢI NHẤT";
+      } else if (ve.slice(2) === kq.slice(2)) {
+        tien = 10000;
+        msg = "🥈 GIẢI NHÌ";
+      } else if (kq.includes(ve[0]) || kq.includes(ve[1]) || kq.includes(ve[2])) {
+        tien = 5000;
+        msg = "🥉 GIẢI BA";
+      }
+
+      document.getElementById("msg").innerText =
+        msg + " | Nhận: " + tien.toLocaleString() + "đ";
+    });
+}
+</script>
+
+</body>
+</html>
