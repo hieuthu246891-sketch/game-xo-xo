@@ -1,0 +1,26 @@
+name: Quay so 3 so
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 18:00 VN
+  workflow_dispatch:
+
+jobs:
+  quay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Tao so
+        run: |
+          NUMBER=$(printf "%03d" $((RANDOM % 1000)))
+          DATE=$(date +'%Y-%m-%d')
+          echo "{ \"date\": \"$DATE\", \"number\": \"$NUMBER\" }" > result.json
+
+      - name: Commit
+        run: |
+          git config user.name "xo-so-bot"
+          git config user.email "bot@github.com"
+          git add result.json
+          git commit -m "Quay so"
+          git push
